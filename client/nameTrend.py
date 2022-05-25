@@ -18,22 +18,36 @@ df = pd.read_csv(r'baby-names-state.csv')
 app.layout = html.Div([
     html.Div([
         html.H6("Trend of Name"),
-        html.Div([
-            "Name: ",
-            dcc.Input(id='input-name', value='Aaban', type='text')
-        ]),
-        html.Div([
-            dcc.RadioItems(
-                id='input-sex',
-                options=[
-                    {'label': 'Female', 'value': 'F'},
-                    {'label': 'Male', 'value': 'M'},
-                ],
-                value='M'
-            )
-        ]),
+
     ]),
-    dcc.Graph(id='trend-graph')
+    dcc.Graph(id='trend-graph'),
+    html.Div([
+        "Name: ",
+        dcc.Input(id='input-name', value='Aaban', type='text')
+    ],
+        style={'width': '200px',
+               # 'display': 'inline-block',
+               'padding': '0px',
+               'margin': '0 auto'
+               }
+    ),
+    html.Div([
+        dcc.RadioItems(
+            id='input-sex',
+            options=[
+                {'label': 'Female', 'value': 'F'},
+                {'label': 'Male', 'value': 'M'},
+            ],
+            value='M',
+        )
+    ],
+    style={'width': '160px',
+           # 'display': 'inline-block',
+           'padding': '0px',
+           'margin': '10px auto'
+           }
+    ),
+
 ])
 
 
@@ -53,12 +67,11 @@ def update_figure(name, sex):
         year_f = sex_df.loc[year].sort_values("count", ascending=False)['count']
         try:
             years_used.append(year)
-            rank = np.where(year_f.index == name)[0] + 1
+            rank = (np.where(year_f.index == name)[0] + 1) / len(year_f)
             if len(rank) == 0:
-                # rank_list.append(len(year_f))
                 rank_list.append(0)
             else:
-                rank_list.append(rank[0])
+                rank_list.append(1 - rank[0])
         except:
             pass
 
