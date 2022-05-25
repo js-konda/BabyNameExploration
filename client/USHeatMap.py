@@ -24,7 +24,7 @@ app.layout = html.Div([
     html.Div([
         html.Div([
             'Year  ',
-            dcc.Input(id='input-year', value='', type='text')
+            dcc.Input(id='input-year', type='number')
         ],
             style={'width': '500px',
                    # 'display': 'inline-block',
@@ -35,7 +35,7 @@ app.layout = html.Div([
         ),
 
         html.Div(
-            id='the-alert',
+            id='the-alert1',
             children=[],
             style={'display': 'inline-block',
                    'position': 'absolute',
@@ -64,7 +64,7 @@ app.layout = html.Div([
 
         html.Div([
             'Name ',
-            dcc.Input(id='input-name', value='Oliver', type='text')
+            dcc.Input(id='input-name', value='', type='text')
         ],
         style={'width': '200px',
                # 'display': 'inline-block',
@@ -76,18 +76,31 @@ app.layout = html.Div([
 
                }
         ),
+        html.Div(
+            id='the-alert2',
+            children=[],
+            style={'display': 'inline-block',
+                   'position': 'absolute',
+                   'height': '50px',
+                   'top': '60px',
+                   'left': '660px'
+                   }
+        ),
     ],
     style={'position':'relative'}
     ),
 
 ])
 
-alert = dbc.Alert("Please input year between 1910-2020", color='danger', dismissable=False, duration=100000)
+alert1 = dbc.Alert("Please input year between 1910-2020!", color='danger', dismissable=False, duration=1500)
+alert2 = dbc.Alert("Invaild Name!", color='danger', dismissable=False, duration=1500)
+
 
 
 @app.callback(
     Output('trend-graph', 'figure'),
-    Output('the-alert', 'children'),
+    Output('the-alert1', 'children'),
+    Output('the-alert2', 'children'),
     Input('input-name', 'value'),
     Input('input-sex', 'value'),
     Input('input-year', 'value')
@@ -95,10 +108,31 @@ alert = dbc.Alert("Please input year between 1910-2020", color='danger', dismiss
 
 
 def update_figure(name,sex, year):
+    data = [dict(type='choropleth',
+                     locationmode='USA-states',
+                     autocolorscale=False,
+                     marker=dict(
+                         line=dict(color='rgb(255,255,255)', width=1)),
+                     colorbar=dict(autotick=True, tickprefix='', title='Rank'),
+                     reversescale=True,
+                     )
+                ]
+    layout = dict(
+            geo=dict(
+            scope='usa',
+            projection=dict(type='albers usa'),
+            showlakes=True,
+            lakecolor='rgb(255, 255, 255)'),
+    )
+    fig = dict(data=data, layout=layout)
     #your validation here
-    if year not in df.year.values and year != '':
-        return [], alert
-    year = int(year)
+    if year not in df.year.values and year != None:
+        return fig, alert1, dash.no_update
+    elif name not in df.name.values and name != '':
+        return fig, dash.no_update, alert2
+    elif year == None or year == '':
+        return fig, dash.no_update, dash.no_update
+    # year = int(year)
     sex_df = df.loc[df['sex'] == sex]
     year_sex_df = sex_df.loc[sex_df['year'] == year].groupby(['state_abb', 'name']).sum().drop(['year'], axis=1)
     all_states = df['state_abb'].unique()
@@ -137,7 +171,7 @@ def update_figure(name,sex, year):
     )
     fig = dict(data=data, layout=layout)
     # fig2 = py.iplot(fig, validate=False, filename='USmap')
-    return fig, dash.no_update
+    return fig, dash.no_update, dash.no_update
 
 if __name__ == '__main__':
     app.run_server()
