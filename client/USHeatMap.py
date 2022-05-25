@@ -14,26 +14,37 @@ import plotly.offline as py
 from plotly.offline import init_notebook_mode
 init_notebook_mode(connected=True)
 from dash.dependencies import Input, Output
+import dash_bootstrap_components as dbc
 
 app = Dash(__name__)
 df = pd.read_csv(r'baby-names-state.csv')
 
 app.layout = html.Div([
+    dcc.Graph(id='trend-graph'),
     html.Div([
-        dcc.Graph(id='trend-graph'),
         html.Div([
-            'Year',
-            dcc.Slider(1910, 2020, 1,
-                       marks=None,
-                       value=2020,
-                       id='input-year'),
+            'Year  ',
+            dcc.Input(id='input-year', value='', type='text')
         ],
             style={'width': '500px',
                    # 'display': 'inline-block',
-                   'padding': '0px',
-                   'margin': '0 auto'
+                   'position': 'absolute',
+                   'top': '60px',
+                   'left': '470px',
+            }
+        ),
+
+        html.Div(
+            id='the-alert',
+            children=[],
+            style={'display': 'inline-block',
+                   'position': 'absolute',
+                   'height': '50px',
+                   'top': '60px',
+                   'left': '660px'
                    }
         ),
+
         html.Div([
             dcc.RadioItems(
                 id='input-sex',
@@ -47,25 +58,36 @@ app.layout = html.Div([
         style={'width': '180px',
                # 'display': 'inline-block',
                'padding': '0px',
-               'margin': '0 auto'
+               'margin': '0 auto',
                }
         ),
+
         html.Div([
+            'Name ',
             dcc.Input(id='input-name', value='Oliver', type='text')
         ],
         style={'width': '200px',
+               # 'display': 'inline-block',
+               'position':'absolute',
                'padding': '0px',
-               'margin': '15px auto'
+               'margin': '15px auto',
+                'top': '12px',
+                'left': '470px'
+
                }
         ),
-    ]),
+    ],
+    style={'position':'relative'}
+    ),
 
 ])
 
+alert = dbc.Alert("Please input year between 1910-2020", color='danger', dismissable=False, duration=100000)
 
 
 @app.callback(
     Output('trend-graph', 'figure'),
+    Output('the-alert', 'children'),
     Input('input-name', 'value'),
     Input('input-sex', 'value'),
     Input('input-year', 'value')
@@ -73,6 +95,9 @@ app.layout = html.Div([
 
 
 def update_figure(name,sex, year):
+    #your validation here
+    if year not in df.year.values and year != '':
+        return [], alert
     year = int(year)
     sex_df = df.loc[df['sex'] == sex]
     year_sex_df = sex_df.loc[sex_df['year'] == year].groupby(['state_abb', 'name']).sum().drop(['year'], axis=1)
@@ -112,7 +137,7 @@ def update_figure(name,sex, year):
     )
     fig = dict(data=data, layout=layout)
     # fig2 = py.iplot(fig, validate=False, filename='USmap')
-    return fig
+    return fig, dash.no_update
 
 if __name__ == '__main__':
     app.run_server()

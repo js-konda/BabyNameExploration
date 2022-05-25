@@ -10,6 +10,7 @@ from dash import Dash
 import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output
+import dash_bootstrap_components as dbc
 
 app = Dash(__name__)
 
@@ -22,15 +23,34 @@ app.layout = html.Div([
     ]),
     dcc.Graph(id='trend-graph'),
     html.Div([
-        "Name: ",
-        dcc.Input(id='input-name', value='Aaban', type='text')
+        html.Div([
+            "Name: ",
+            dcc.Input(id='input-name', value='', type='text')
+        ],
+            style={'height':'50px',
+                   'display':'inline-block',
+                   'position': 'absolute',
+                   'left': '120px'
+                   }
+        ),
+        html.Div(
+            id='the-alert',
+            children=[],
+            style={'display':'inline-block',
+                   'position':'absolute',
+                   'height':'50px',
+                   'left':'320px'
+                   }
+        ),
     ],
-        style={'width': '200px',
-               # 'display': 'inline-block',
-               'padding': '0px',
-               'margin': '0 auto'
-               }
-    ),
+    style={
+    'width':'500px',
+    'height':'30px',
+    'margin': '0 auto',
+    'position':'relative'
+    }),
+
+
     html.Div([
         dcc.RadioItems(
             id='input-sex',
@@ -47,15 +67,18 @@ app.layout = html.Div([
            'margin': '10px auto'
            }
     ),
-
 ])
 
+alert = dbc.Alert("Invalid Name!", color="danger", dismissable=False, duration=10000)
 
 @app.callback(
     Output('trend-graph', 'figure'),
+    Output('the-alert', 'children'),
     Input('input-name', 'value'),
     Input('input-sex', 'value'))
 def update_figure(name, sex):
+    if name not in df.name.values and name != '':  # if illegal, make graph blank and show alert
+        return [], alert
     name_df = df.loc[df['name'] == name].reset_index(drop=True)
     sex_name_df = name_df.loc[name_df['sex'] == sex]
     sex_df = df.loc[df['sex'] == sex].groupby(['year', 'name']).sum()
@@ -84,7 +107,7 @@ def update_figure(name, sex):
                       yaxis_title="Value (log scale)")
     fig.update_yaxes(type="log")
 
-    return fig
+    return fig, dash.no_update
 
 
 if __name__ == '__main__':
