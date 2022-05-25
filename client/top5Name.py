@@ -38,7 +38,7 @@ app.layout = html.Div([
 
                 html.Div([
                     'Year  ',
-                    dcc.Input(id='input-year', value='', type='text')
+                    dcc.Input(id='input-year', type='number')
                 ],
                     style={'width': '500px',
                            # 'display': 'inline-block',
@@ -55,7 +55,7 @@ app.layout = html.Div([
                     style={'display': 'inline-block',
                            'position': 'absolute',
                            'height': '50px',
-                           'left': '500px'
+                           'left': '530px'
                            }
                 ),
 
@@ -87,7 +87,7 @@ app.layout = html.Div([
 
 )
 
-alert = dbc.Alert("Please input year between 1910-2020", color='danger', dismissable=False, duration=100000)
+alert = dbc.Alert("Please input year between 1910-2020!", color='danger', dismissable=False, duration=1500)
 
 @app.callback(
     Output('trend-graph', 'figure'),
@@ -98,10 +98,11 @@ alert = dbc.Alert("Please input year between 1910-2020", color='danger', dismiss
 )
 
 def update_figure(year, sex, th):
-    if year not in df.year.values and year != '':
+    if year not in df.year.values and year != None:
         return [], alert
     year = int(year)
     th = int(th)
+
 
     names = df.groupby(['name', 'year', 'sex'])['count'].sum().reset_index()
     sort_names = names.sort_values(by=['year', 'count'], ascending=False)
@@ -111,9 +112,9 @@ def update_figure(year, sex, th):
     c = [i for i in range(th)]
     fig = go.Figure()
     fig.add_trace(go.Bar(x=sort_names_year_sex_th['count']
-                         , y=sort_names_year_sex_th['name']
-                         , orientation='h'
-                         , marker=dict(color=c, colorscale='RdBu')))
+                          , y=sort_names_year_sex_th['name']
+                          , orientation='h'
+                          , marker=dict(color=c, colorscale='RdBu')))
     fig.update_layout(uniformtext_minsize=2, uniformtext_mode='hide', showlegend=False
                       , yaxis={'categoryorder': 'total ascending'}
                       , plot_bgcolor='rgba(0,128,0,0.3)'
@@ -123,6 +124,3 @@ def update_figure(year, sex, th):
 
 if __name__ == '__main__':
     app.run_server()
-
-
-

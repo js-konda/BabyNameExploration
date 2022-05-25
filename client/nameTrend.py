@@ -39,7 +39,7 @@ app.layout = html.Div([
             style={'display':'inline-block',
                    'position':'absolute',
                    'height':'50px',
-                   'left':'320px'
+                   'left':'380px'
                    }
         ),
     ],
@@ -69,7 +69,7 @@ app.layout = html.Div([
     ),
 ])
 
-alert = dbc.Alert("Invalid Name!", color="danger", dismissable=False, duration=10000)
+alert = dbc.Alert("Invalid Name!", color="danger", dismissable=False, duration=1500)
 
 @app.callback(
     Output('trend-graph', 'figure'),
@@ -101,7 +101,7 @@ def update_figure(name, sex):
     fig = go.Figure()
     year_sex_name_df = sex_name_df.groupby('year').sum()
     fig.add_trace(go.Scatter(x=year_sex_name_df.index, y=year_sex_name_df['count'], name='Total Number'))
-    fig.add_trace(go.Bar(x=years_used, y=rank_list, name='Rank'))
+    fig.add_trace(go.Bar(x=years_used, y=rank_list, name='Popularity'))
     fig.update_layout(title={'text': f"Trend of " + name + " Over Time", 'x': 0.5,
                              'xanchor': 'center', 'font': {'size': 20}}, xaxis_title="Year",
                       yaxis_title="Value (log scale)")
