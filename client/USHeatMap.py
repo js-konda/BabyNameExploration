@@ -64,7 +64,7 @@ app.layout = html.Div([
 
         html.Div([
             'Name ',
-            dcc.Input(id='input-name', value='', type='text')
+            dcc.Input(id='input-name', type='text')
         ],
         style={'width': '200px',
                # 'display': 'inline-block',
@@ -128,7 +128,7 @@ def update_figure(name,sex, year):
     #your validation here
     if year not in df.year.values and year != None:
         return fig, alert1, dash.no_update
-    elif name not in df.name.values and name != '':
+    elif name not in df.name.values and name != None:
         return fig, dash.no_update, alert2
     elif year == None or year == '':
         return fig, dash.no_update, dash.no_update
