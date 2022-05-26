@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 import os
 import sys
 import plotly.graph_objects as go
@@ -11,21 +10,19 @@ import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
+from app import app, df
 
-app = Dash(__name__)
 
-df = pd.read_csv(r'baby-names-state.csv')
-
-app.layout = html.Div([
+layout = html.Div([
     html.Div([
         html.H6("Trend of Name"),
 
     ]),
-    dcc.Graph(id='trend-graph'),
+    dcc.Graph(id='name-trend-graph'),
     html.Div([
         html.Div([
             "Name: ",
-            dcc.Input(id='input-name', value='', type='text')
+            dcc.Input(id='name-trend-input-name', value='', type='text')
         ],
             style={'height':'50px',
                    'display':'inline-block',
@@ -34,7 +31,7 @@ app.layout = html.Div([
                    }
         ),
         html.Div(
-            id='the-alert',
+            id='name-trend-the-alert',
             children=[],
             style={'display':'inline-block',
                    'position':'absolute',
@@ -53,7 +50,7 @@ app.layout = html.Div([
 
     html.Div([
         dcc.RadioItems(
-            id='input-sex',
+            id='name-trend-input-sex',
             options=[
                 {'label': 'Female', 'value': 'F'},
                 {'label': 'Male', 'value': 'M'},
@@ -72,10 +69,10 @@ app.layout = html.Div([
 alert = dbc.Alert("Invalid Name!", color="danger", dismissable=False, duration=1500)
 
 @app.callback(
-    Output('trend-graph', 'figure'),
-    Output('the-alert', 'children'),
-    Input('input-name', 'value'),
-    Input('input-sex', 'value'))
+    Output('name-trend-graph', 'figure'),
+    Output('name-trend-the-alert', 'children'),
+    Input('name-trend-input-name', 'value'),
+    Input('name-trend-input-sex', 'value'))
 def update_figure(name, sex):
     if name not in df.name.values and name != '':  # if illegal, make graph blank and show alert
         return [], alert
@@ -111,4 +108,5 @@ def update_figure(name, sex):
 
 
 if __name__ == '__main__':
+    app.layout = layout
     app.run_server()
