@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 import os
 import sys
 import plotly.graph_objects as go
@@ -12,19 +11,18 @@ import dash_core_components as dcc
 from plotly.subplots import make_subplots
 import plotly.offline as py
 from plotly.offline import init_notebook_mode
-init_notebook_mode(connected=True)
+#init_notebook_mode(connected=True)
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
+from app import app, df
 
-app = Dash(__name__)
-df = pd.read_csv(r'baby-names-state.csv')
 
-app.layout = html.Div([
-    dcc.Graph(id='trend-graph'),
+layout = html.Div([
+    dcc.Graph(id='us-heat-map-graph'),
     html.Div([
         html.Div([
             'Year  ',
-            dcc.Input(id='input-year', type='number')
+            dcc.Input(id='us-heat-map-input-year', type='number')
         ],
             style={'width': '500px',
                    # 'display': 'inline-block',
@@ -35,7 +33,7 @@ app.layout = html.Div([
         ),
 
         html.Div(
-            id='the-alert1',
+            id='us-heat-map-the-alert1',
             children=[],
             style={'display': 'inline-block',
                    'position': 'absolute',
@@ -47,7 +45,7 @@ app.layout = html.Div([
 
         html.Div([
             dcc.RadioItems(
-                id='input-sex',
+                id='us-heat-map-input-sex',
                 options=[
                     {'label': 'Female', 'value': 'F'},
                     {'label': 'Male', 'value': 'M'},
@@ -64,7 +62,7 @@ app.layout = html.Div([
 
         html.Div([
             'Name ',
-            dcc.Input(id='input-name', type='text')
+            dcc.Input(id='us-heat-map-input-name', type='text')
         ],
         style={'width': '200px',
                # 'display': 'inline-block',
@@ -77,7 +75,7 @@ app.layout = html.Div([
                }
         ),
         html.Div(
-            id='the-alert2',
+            id='us-heat-map-the-alert2',
             children=[],
             style={'display': 'inline-block',
                    'position': 'absolute',
@@ -98,12 +96,12 @@ alert2 = dbc.Alert("Invaild Name!", color='danger', dismissable=False, duration=
 
 
 @app.callback(
-    Output('trend-graph', 'figure'),
-    Output('the-alert1', 'children'),
-    Output('the-alert2', 'children'),
-    Input('input-name', 'value'),
-    Input('input-sex', 'value'),
-    Input('input-year', 'value')
+    Output('us-heat-map-graph', 'figure'),
+    Output('us-heat-map-the-alert1', 'children'),
+    Output('us-heat-map-the-alert2', 'children'),
+    Input('us-heat-map-input-name', 'value'),
+    Input('us-heat-map-input-sex', 'value'),
+    Input('us-heat-map-input-year', 'value')
 )
 
 
@@ -173,6 +171,8 @@ def update_figure(name,sex, year):
     # fig2 = py.iplot(fig, validate=False, filename='USmap')
     return fig, dash.no_update, dash.no_update
 
+
 if __name__ == '__main__':
+    app.layout = layout
     app.run_server()
 
