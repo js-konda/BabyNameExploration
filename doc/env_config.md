@@ -6,7 +6,6 @@ pip install dash-bootstrap-components
 ```
 
 ## File Structure
-```md
 - client
     - baby-names-state.csv _(should be added manually)_ 
     - app.py
@@ -15,7 +14,6 @@ pip install dash-bootstrap-components
     - top5Name,py
     - USHeatMap.py
 - doc
-```
 
 ## Start
 ```shell
