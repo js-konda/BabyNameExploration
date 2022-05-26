@@ -24,23 +24,42 @@ layout = html.Div([
             'Year  ',
             dcc.Input(id='us-heat-map-input-year', type='number')
         ],
-            style={'width': '500px',
+            style={
+
                    # 'display': 'inline-block',
-                   'position': 'absolute',
-                   'top': '60px',
-                   'left': '470px',
+                   # 'position': 'absolute',
+                   # 'top': '60px',
+                   # 'left': '470px',
             }
         ),
 
         html.Div(
             id='us-heat-map-the-alert1',
             children=[],
-            style={'display': 'inline-block',
+            style={
                    'position': 'absolute',
-                   'height': '50px',
-                   'top': '60px',
-                   'left': '660px'
+                   # 'height': '50px',
+                   'top': '0px',
+                   'left': '200px',
                    }
+        ),
+
+
+
+        html.Div([
+            'Name ',
+            dcc.Input(id='us-heat-map-input-name', type='text')
+        ],
+        style={
+               # 'display': 'inline-block',
+               # 'position':'absolute',
+               'padding': '0px',
+               'margin': '4px 0 4px',
+               # 'margin': '15px auto',
+                # 'top': '12px',
+                # 'left': '470px'
+
+               }
         ),
 
         html.Div([
@@ -53,45 +72,34 @@ layout = html.Div([
                 value='M'
             )
         ],
-        style={'width': '180px',
-               # 'display': 'inline-block',
-               'padding': '0px',
-               'margin': '0 auto',
-               }
+            style={
+                # 'display': 'inline-block',
+
+            }
         ),
 
-        html.Div([
-            'Name ',
-            dcc.Input(id='us-heat-map-input-name', type='text')
-        ],
-        style={'width': '200px',
-               # 'display': 'inline-block',
-               'position':'absolute',
-               'padding': '0px',
-               'margin': '15px auto',
-                'top': '12px',
-                'left': '470px'
-
-               }
-        ),
         html.Div(
             id='us-heat-map-the-alert2',
             children=[],
             style={'display': 'inline-block',
                    'position': 'absolute',
                    'height': '50px',
-                   'top': '60px',
-                   'left': '660px'
+                   'top': '26px',
+                   'left': '200px'
+                   # 'left': '660px'
                    }
         ),
     ],
-    style={'position':'relative'}
+    style={'position':'relative',
+           'width':'500px',
+           'margin':'0 auto'
+           }
     ),
 
 ])
 
-alert1 = dbc.Alert("Please input year between 1910-2020!", color='danger', dismissable=False, duration=1500)
-alert2 = dbc.Alert("Invaild Name!", color='danger', dismissable=False, duration=1500)
+alert1 = dbc.Alert("Year between 1910-2020!", color='danger', dismissable=False, duration=15000)
+alert2 = dbc.Alert("Invaild Name!", color='danger', dismissable=False, duration=15000)
 
 
 

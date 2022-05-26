@@ -14,11 +14,10 @@ from app import app, df
 
 
 layout = html.Div([
+    dcc.Graph(id='top5-name-graph'),
+
     html.Div([
-        dcc.Graph(id='top5-name-graph'),
             html.Div([
-
-
                 html.Div([
                     'TOP',
                     dcc.Slider(1, 15, 1,
@@ -41,18 +40,20 @@ layout = html.Div([
                            # 'display': 'inline-block',
                            'padding': '0px',
                            'margin': '0 auto',
-                           'position': 'absolute',
-                           'left': '310px',
+                           # 'position': 'absolute',
+                           # 'left': '310px',
                            }
                 ),
 
                 html.Div(
                     id='top5-name-the-alert',
                     children=[],
-                    style={'display': 'inline-block',
+                    style={
+                           # 'display': 'inline-block',
                            'position': 'absolute',
                            'height': '50px',
-                           'left': '530px'
+                           'left': '200px',
+                            'top': '60px'
                            }
                 ),
 
@@ -69,15 +70,17 @@ layout = html.Div([
                 style={'width': '150px',
                       # 'display': 'inline-block',
                       'margin': '0 auto',
-                      'position': 'absolute',
-                      'top':'90px',
-                      'left': '500px',
+                      'margin-top':'4px'
+                      # 'position': 'absolute',
+                      # 'top':'90px',
+                      # 'left': '500px',
                 }),
 
             ],
             style={
                 'margin':'0 auto',
-                'position':'relative'
+                'position':'relative',
+                'width':'500px'
             })
     ]),
 ],

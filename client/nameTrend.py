@@ -14,10 +14,7 @@ from app import app, df
 
 
 layout = html.Div([
-    html.Div([
-        html.H6("Trend of Name"),
 
-    ]),
     dcc.Graph(id='name-trend-graph'),
     html.Div([
         html.Div([
