@@ -98,8 +98,8 @@ layout = html.Div([
 
 ])
 
-alert1 = dbc.Alert("Year between 1910-2020!", color='danger', dismissable=False, duration=15000)
-alert2 = dbc.Alert("Invaild Name!", color='danger', dismissable=False, duration=15000)
+alert1 = dbc.Alert("Year between 1910-2020!", color='danger', dismissable=False, duration=1500)
+alert2 = dbc.Alert("Invaild Name!", color='danger', dismissable=False, duration=1500)
 
 
 
