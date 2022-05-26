@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 import os
 import sys
 import plotly.graph_objects as go
@@ -11,14 +10,12 @@ import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
+from app import app, df
 
-app = Dash(__name__)
 
-df = pd.read_csv(r'baby-names-state.csv')
-
-app.layout = html.Div([
+layout = html.Div([
     html.Div([
-        dcc.Graph(id='trend-graph'),
+        dcc.Graph(id='top5-name-graph'),
             html.Div([
 
 
@@ -27,7 +24,7 @@ app.layout = html.Div([
                     dcc.Slider(1, 15, 1,
                                # marks=None,
                                value=5,
-                               id='input-th'),
+                               id='top5-name-input-th'),
                 ],
                     style={'width': '500px',
                            # 'display': 'inline-block',
@@ -38,7 +35,7 @@ app.layout = html.Div([
 
                 html.Div([
                     'Year  ',
-                    dcc.Input(id='input-year', type='number')
+                    dcc.Input(id='top5-name-input-year', type='number')
                 ],
                     style={'width': '500px',
                            # 'display': 'inline-block',
@@ -50,7 +47,7 @@ app.layout = html.Div([
                 ),
 
                 html.Div(
-                    id='the-alert',
+                    id='top5-name-the-alert',
                     children=[],
                     style={'display': 'inline-block',
                            'position': 'absolute',
@@ -61,7 +58,7 @@ app.layout = html.Div([
 
                 html.Div([
                     dcc.RadioItems(
-                        id='input-sex',
+                        id='top5-name-input-sex',
                         options=[
                             {'label': 'Female', 'value': 'F'},
                             {'label': 'Male', 'value': 'M'},
@@ -90,11 +87,11 @@ app.layout = html.Div([
 alert = dbc.Alert("Please input year between 1910-2020!", color='danger', dismissable=False, duration=1500)
 
 @app.callback(
-    Output('trend-graph', 'figure'),
-    Output('the-alert', 'children'),
-    Input('input-year', 'value'),
-    Input('input-sex', 'value'),
-    Input('input-th', 'value')
+    Output('top5-name-graph', 'figure'),
+    Output('top5-name-the-alert', 'children'),
+    Input('top5-name-input-year', 'value'),
+    Input('top5-name-input-sex', 'value'),
+    Input('top5-name-input-th', 'value')
 )
 
 def update_figure(year, sex, th):
@@ -123,4 +120,5 @@ def update_figure(year, sex, th):
 
 
 if __name__ == '__main__':
+    app.layout = layout
     app.run_server()
