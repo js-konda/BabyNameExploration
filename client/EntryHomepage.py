@@ -1,11 +1,72 @@
-import dash_html_components as html
 from app import app
+import dash
+import dash_bootstrap_components as dbc
+from dash import Input, Output, dcc, html
 import nameTrend
 import top5Name
 import USHeatMap
 
-parentLayout = html.Div([nameTrend.layout, top5Name.layout, USHeatMap.layout])
 
-app.layout = parentLayout
+# the style arguments for the sidebar. We use position:fixed and a fixed width
+SIDEBAR_STYLE = {
+    "position": "fixed",
+    "top": 0,
+    "left": 0,
+    "bottom": 0,
+    "width": "16rem",
+    "padding": "2rem 1rem",
+    "background-color": "#f8f9fa",
+}
 
-app.run_server()
+# the styles for the main content position it to the right of the sidebar and
+# add some padding.
+CONTENT_STYLE = {
+    "margin-left": "18rem",
+    "margin-right": "2rem",
+    "padding": "2rem 1rem",
+}
+
+sidebar = html.Div(
+    [
+        html.P(
+            "US Newborn Naming Analysis", className="lead"
+        ),
+        html.Hr(),
+        dbc.Nav(
+            [
+                dbc.NavLink("Name Trend", href="/", active="exact"),
+                dbc.NavLink("Top 5 Names", href="/top-5", active="exact"),
+                dbc.NavLink("US Heat Map", href="/heat-map", active="exact"),
+            ],
+            vertical=True,
+            pills=True,
+        ),
+    ],
+    style=SIDEBAR_STYLE,
+)
+
+content = html.Div(id="page-content", style=CONTENT_STYLE)
+
+app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
+
+
+@app.callback(Output("page-content", "children"), [Input("url", "pathname")])
+def render_page_content(pathname):
+    if pathname == "/":
+        return nameTrend.layout
+    elif pathname == "/top-5":
+        return top5Name.layout
+    elif pathname == "/heat-map":
+        return USHeatMap.layout
+    # If the user tries to reach a different page, return a 404 message
+    return dbc.Jumbotron(
+        [
+            html.H1("404: Not found", className="text-danger"),
+            html.Hr(),
+            html.P(f"The pathname {pathname} was not recognised..."),
+        ]
+    )
+
+
+if __name__ == '__main__':
+    app.run_server()
