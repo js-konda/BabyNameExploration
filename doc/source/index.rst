@@ -36,7 +36,6 @@ Start the project
 --------------------
 
 **For Entering the Homepage Dashboard:**
-
 .. code-block::
    python client/EntryHomepage.py
 
