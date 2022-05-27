@@ -1,17 +1,12 @@
-import pandas as pd
-import numpy as np
-import os
-import sys
-import plotly.graph_objects as go
-import plotly.express as px
 import dash
-from dash import Dash
-import dash_html_components as html
-import dash_core_components as dcc
-from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
-from app import app, df
+import dash_core_components as dcc
+import dash_html_components as html
+import numpy as np
+import plotly.graph_objects as go
+from dash.dependencies import Input, Output
 
+from app import app, df
 
 layout = html.Div([
 
@@ -19,7 +14,7 @@ layout = html.Div([
     html.Div([
         html.Div([
             "Name: ",
-            dcc.Input(id='name-trend-input-name', value='', type='text')
+            dcc.Input(id='name-trend-input-name', value='James', type='text')
         ],
             style={'height':'50px',
                    'display':'inline-block',
@@ -52,12 +47,12 @@ layout = html.Div([
                 {'label': 'Female', 'value': 'F'},
                 {'label': 'Male', 'value': 'M'},
             ],
-            value='M',
+            value='F',
         )
     ],
     style={'width': '160px',
            # 'display': 'inline-block',
-           'padding': '0px',
+           'padding': '5px',
            'margin': '10px auto'
            }
     ),
