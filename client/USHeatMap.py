@@ -1,28 +1,19 @@
-import pandas as pd
-import numpy as np
-import os
-import sys
-import plotly.graph_objects as go
-import plotly.express as px
 import dash
-from dash import Dash
-import dash_html_components as html
-import dash_core_components as dcc
-from plotly.subplots import make_subplots
-import plotly.offline as py
-from plotly.offline import init_notebook_mode
-#init_notebook_mode(connected=True)
-from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
-from app import app, df
+import dash_core_components as dcc
+import dash_html_components as html
+import numpy as np
+# init_notebook_mode(connected=True)
+from dash.dependencies import Input, Output
 
+from app import app, df
 
 layout = html.Div([
     dcc.Graph(id='us-heat-map-graph'),
     html.Div([
         html.Div([
             'Year  ',
-            dcc.Input(id='us-heat-map-input-year', type='number')
+            dcc.Input(id='us-heat-map-input-year', type='number',value=2020)
         ],
             style={
 
@@ -48,7 +39,7 @@ layout = html.Div([
 
         html.Div([
             'Name ',
-            dcc.Input(id='us-heat-map-input-name', type='text')
+            dcc.Input(id='us-heat-map-input-name', type='text', value='Lily')
         ],
         style={
                # 'display': 'inline-block',
@@ -69,7 +60,7 @@ layout = html.Div([
                     {'label': 'Female', 'value': 'F'},
                     {'label': 'Male', 'value': 'M'},
                 ],
-                value='M'
+                value='F'
             )
         ],
             style={
