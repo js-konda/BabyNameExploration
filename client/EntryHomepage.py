@@ -1,11 +1,11 @@
-from app import app
-import dash
 import dash_bootstrap_components as dbc
 from dash import Input, Output, dcc, html
+
+import USHeatMap
 import nameTrend
 import top5Name
-import USHeatMap
-
+import nameCloud
+from app import app
 
 # the style arguments for the sidebar. We use position:fixed and a fixed width
 SIDEBAR_STYLE = {
@@ -37,6 +37,7 @@ sidebar = html.Div(
                 dbc.NavLink("Name Trend", href="/", active="exact"),
                 dbc.NavLink("Top 5 Names", href="/top-5", active="exact"),
                 dbc.NavLink("US Heat Map", href="/heat-map", active="exact"),
+                dbc.NavLink("US Name Cloud", href="/name-cloud", active="exact")
             ],
             vertical=True,
             pills=True,
@@ -58,6 +59,8 @@ def render_page_content(pathname):
         return top5Name.layout
     elif pathname == "/heat-map":
         return USHeatMap.layout
+    elif pathname == "/name-cloud":
+        return nameCloud.layout
     # If the user tries to reach a different page, return a 404 message
     return dbc.Jumbotron(
         [
