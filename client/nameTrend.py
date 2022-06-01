@@ -137,13 +137,15 @@ alert = dbc.Alert("Invalid Name!", color="danger", dismissable=False, duration=1
 def update_figure(name, sex, state):
     if name not in df.name.values and name != '':  # if illegal, make graph blank and show alert
         return [], alert
-    name_df = df.loc[df['name'] == name].reset_index(drop=True)
-    sex_name_df = name_df.loc[name_df['sex'] == sex]
+    new_df = df
     if state is not None:
-        sex_name_df = sex_name_df.loc[sex_name_df['state_abb'] == state]
-    sex_df = df.loc[df['sex'] == sex].groupby(['year', 'name']).sum()
+        new_df = df[(df['state_abb'] == state)]
 
-    all_years = df['year'].unique()
+    name_df = new_df.loc[new_df['name'] == name].reset_index(drop=True)
+    sex_name_df = name_df.loc[name_df['sex'] == sex]
+    sex_df = new_df.loc[new_df['sex'] == sex].groupby(['year', 'name']).sum()
+
+    all_years = new_df['year'].unique()
     years_used = []
     rank_list = []
     for year in all_years:
