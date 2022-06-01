@@ -12,15 +12,30 @@ layout = html.Div([
     dcc.Graph(id='us-heat-map-graph'),
     html.Div([
         html.Div([
+            'Name ',
+            dcc.Input(id='us-heat-map-input-name', type='text', value='Lily')
+        ],
+            style={
+                # 'display': 'inline-block',
+                # 'position':'absolute',
+                'padding': '2px',
+                'margin': '4px 0 4px',
+                # 'margin': '15px auto',
+                # 'top': '12px',
+                # 'left': '470px'
+
+            }
+        ),
+        html.Div([
             'Year  ',
-            dcc.Input(id='us-heat-map-input-year', type='number',value=2020)
+            dcc.Input(id='us-heat-map-input-year', type='number', value=2020)
         ],
             style={
 
-                   # 'display': 'inline-block',
-                   # 'position': 'absolute',
-                   # 'top': '60px',
-                   # 'left': '470px',
+                # 'display': 'inline-block',
+                # 'position': 'absolute',
+                # 'top': '60px',
+                # 'left': '470px',
             }
         ),
 
@@ -28,30 +43,14 @@ layout = html.Div([
             id='us-heat-map-the-alert1',
             children=[],
             style={
-                   'position': 'absolute',
-                   # 'height': '50px',
-                   'top': '0px',
-                   'left': '200px',
-                   }
+                'position': 'absolute',
+                # 'height': '50px',
+                'top': '0px',
+                'left': '200px',
+            }
         ),
 
 
-
-        html.Div([
-            'Name ',
-            dcc.Input(id='us-heat-map-input-name', type='text', value='Lily')
-        ],
-        style={
-               # 'display': 'inline-block',
-               # 'position':'absolute',
-               'padding': '0px',
-               'margin': '4px 0 4px',
-               # 'margin': '15px auto',
-                # 'top': '12px',
-                # 'left': '470px'
-
-               }
-        ),
 
         html.Div([
             dcc.RadioItems(
@@ -81,17 +80,16 @@ layout = html.Div([
                    }
         ),
     ],
-    style={'position':'relative',
-           'width':'500px',
-           'margin':'0 auto'
-           }
+        style={'position': 'relative',
+               'width': '500px',
+               'margin': '0 auto'
+               }
     ),
 
 ])
 
 alert1 = dbc.Alert("Year between 1910-2020!", color='danger', dismissable=False, duration=1500)
 alert2 = dbc.Alert("Invaild Name!", color='danger', dismissable=False, duration=1500)
-
 
 
 @app.callback(
@@ -102,27 +100,26 @@ alert2 = dbc.Alert("Invaild Name!", color='danger', dismissable=False, duration=
     Input('us-heat-map-input-sex', 'value'),
     Input('us-heat-map-input-year', 'value')
 )
-
-
-def update_figure(name,sex, year):
+def update_figure(name, sex, year):
+    name = name.capitalize()
     data = [dict(type='choropleth',
-                     locationmode='USA-states',
-                     autocolorscale=False,
-                     marker=dict(
-                         line=dict(color='rgb(255,255,255)', width=1)),
-                     colorbar=dict(autotick=True, tickprefix='', title='Rank'),
-                     reversescale=True,
-                     )
-                ]
+                 locationmode='USA-states',
+                 autocolorscale=False,
+                 marker=dict(
+                     line=dict(color='rgb(255,255,255)', width=1)),
+                 colorbar=dict(autotick=True, tickprefix='', title='Rank'),
+                 reversescale=True,
+                 )
+            ]
     layout = dict(
-            geo=dict(
+        geo=dict(
             scope='usa',
             projection=dict(type='albers usa'),
             showlakes=True,
             lakecolor='rgb(255, 255, 255)'),
     )
     fig = dict(data=data, layout=layout)
-    #your validation here
+    # your validation here
     if year not in df.year.values and year != None:
         return fig, alert1, dash.no_update
     elif name not in df.name.values and name != None:
@@ -174,4 +171,3 @@ def update_figure(name,sex, year):
 if __name__ == '__main__':
     app.layout = layout
     app.run_server()
-
