@@ -8,6 +8,7 @@ import dash_html_components as html
 import pandas as pd
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
+from datetime import date
 from plotly.subplots import make_subplots
 from wordcloud import WordCloud
 
@@ -28,7 +29,7 @@ layout = html.Div([
             ],
                 style={'width': '500px',
                        # 'display': 'inline-block',
-                       'padding': '0px',
+                       'padding': '2px',
                        'margin': '0 auto'
                        }
             ),
@@ -37,9 +38,9 @@ layout = html.Div([
                 'Year  ',
                 dcc.Input(id='name-cloud-input-year', type='number', value=2020)
             ],
-                style={'width': '300px',
+                style={'width': '500px',
                        # 'display': 'inline-block',
-                       'padding': '0px',
+                       'padding': '2px',
                        'margin': '0 auto',
                        # 'position': 'absolute',
                        # 'left': '310px',
@@ -105,14 +106,32 @@ layout = html.Div([
                     id='name-cloud-input-state'
                 )
             ],
-                style={'width': '300px',
+                style={'width': '500px',
                        # 'display': 'inline-block',
-                       'padding': '5px',
+                       'padding': '2px',
                        'margin': '0 auto',
                        # 'position': 'absolute',
                        # 'left': '310px',
                        }
             ),
+            # html.Div([
+            #     'Year  ',
+            #     dcc.DatePickerRange(
+            #         id='my-date-picker-range',
+            #         end_date=date(2017, 6, 21),
+            #         display_format='YYYY',
+            #         start_date_placeholder_text='YY',
+            #     )
+            # ],
+            #     style={'width': '300px',
+            #            # 'display': 'inline-block',
+            #            'padding': '0px',
+            #            'margin': '0 auto',
+            #            # 'position': 'absolute',
+            #            # 'left': '310px',
+            #            }
+            # ),
+
 
             html.Div(
                 id='name-cloud-graph-alert',
