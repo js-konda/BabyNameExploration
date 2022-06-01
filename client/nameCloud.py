@@ -3,16 +3,15 @@ from io import BytesIO
 
 import dash
 import dash_bootstrap_components as dbc
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 import pandas as pd
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 from datetime import date
 from plotly.subplots import make_subplots
-from wordcloud import WordCloud
 
-from app import app, df
+from client.app import app, df
 
 layout = html.Div([
     dcc.Graph(id='name-cloud-graph',
@@ -178,17 +177,17 @@ def update_figure(year, th, state):
         most_named = pd.Series(sort_names_th['count'].values, index=sort_names_th.index).to_dict()
         return most_named
 
-    def get_name_cloud_image(dic, color):
-        wc = WordCloud(background_color="white",
-                       random_state=42, width=1500, height=1500,
-                       colormap=color)
-        nc = wc.generate_from_frequencies(dic)
-        nc_img = nc.to_image()
-        prefix = "data:image/png;base64,"
-        with BytesIO() as buffer:
-            nc_img.save(buffer, 'png')
-            img = prefix + base64.b64encode(buffer.getvalue()).decode()
-        return img
+    #def get_name_cloud_image(dic, color):
+    #    wc = WordCloud(background_color="white",
+    #                   random_state=42, width=1500, height=1500,
+    #                   colormap=color)
+    #    nc = wc.generate_from_frequencies(dic)
+    #    nc_img = nc.to_image()
+    #    prefix = "data:image/png;base64,"
+    #    with BytesIO() as buffer:
+    #        nc_img.save(buffer, 'png')
+    #        img = prefix + base64.b64encode(buffer.getvalue()).decode()
+    #    return img
 
     if year not in df.year.values and year is not None:
         return [], alert
@@ -197,12 +196,12 @@ def update_figure(year, th, state):
 
     most_named_f = get_most_named_data(year, th, 'F', state)
     most_named_m = get_most_named_data(year, th, 'M', state)
-    f_img = get_name_cloud_image(most_named_f, 'autumn')
-    m_img = get_name_cloud_image(most_named_m, 'winter')
+    #f_img = get_name_cloud_image(most_named_f, 'autumn')
+    #m_img = get_name_cloud_image(most_named_m, 'winter')
 
     fig = make_subplots(rows=1, cols=2)
-    fig.add_trace(go.Image(source=f_img), 1, 1)
-    fig.add_trace(go.Image(source=m_img), 1, 2)
+    #fig.add_trace(go.Image(source=f_img), 1, 1)
+    #fig.add_trace(go.Image(source=m_img), 1, 2)
 
     fig.update_xaxes(visible=False)
     fig.update_yaxes(visible=False)
