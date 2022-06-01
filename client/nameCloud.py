@@ -24,7 +24,7 @@ layout = html.Div([
                 'TOP',
                 dcc.Slider(1, 150, 10,
                            # marks=None,
-                           value=50,
+                           value=70,
                            id='name-cloud-input-th'),
             ],
                 style={'width': '500px',
@@ -178,9 +178,10 @@ def update_figure(year, th, state):
         most_named = pd.Series(sort_names_th['count'].values, index=sort_names_th.index).to_dict()
         return most_named
 
-    def get_name_cloud_image(dic):
+    def get_name_cloud_image(dic, color):
         wc = WordCloud(background_color="white",
-                       random_state=42, width=1500, height=1500)
+                       random_state=42, width=1500, height=1500,
+                       colormap=color)
         nc = wc.generate_from_frequencies(dic)
         nc_img = nc.to_image()
         prefix = "data:image/png;base64,"
@@ -196,8 +197,8 @@ def update_figure(year, th, state):
 
     most_named_f = get_most_named_data(year, th, 'F', state)
     most_named_m = get_most_named_data(year, th, 'M', state)
-    f_img = get_name_cloud_image(most_named_f)
-    m_img = get_name_cloud_image(most_named_m)
+    f_img = get_name_cloud_image(most_named_f, 'autumn')
+    m_img = get_name_cloud_image(most_named_m, 'winter')
 
     fig = make_subplots(rows=1, cols=2)
     fig.add_trace(go.Image(source=f_img), 1, 1)

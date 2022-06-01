@@ -35,7 +35,7 @@ sidebar = html.Div(
         html.Hr(),
         dbc.Nav(
             [
-                dbc.NavLink("Top 5 Names", href="/", active="exact"),
+                dbc.NavLink("Top Names", href="/", active="exact"),
                 dbc.NavLink("US Name Cloud", href="/name-cloud", active="exact"),
                 dbc.NavLink("Name Trend", href="/name-trend", active="exact"),
                 dbc.NavLink("US Heat Map", href="/heat-map", active="exact"),
