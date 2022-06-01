@@ -21,7 +21,7 @@ layout = html.Div([
             ],
                 style={'width': '500px',
                        # 'display': 'inline-block',
-                       'padding': '0px',
+                       'padding': '2px',
                        'margin': '0 auto'
                        }
             ),
@@ -32,7 +32,7 @@ layout = html.Div([
             ],
                 style={'width': '500px',
                        # 'display': 'inline-block',
-                       'padding': '0px',
+                       'padding': '2px',
                        'margin': '0 auto',
                        # 'position': 'absolute',
                        # 'left': '310px',
@@ -99,7 +99,7 @@ layout = html.Div([
             ],
                 style={'width': '500px',
                        # 'display': 'inline-block',
-                       'padding': '5px',
+                       'padding': '2px',
                        'margin': '0 auto',
                        # 'position': 'absolute',
                        # 'left': '310px',
@@ -128,7 +128,7 @@ layout = html.Div([
                     value='F'
                 )
             ],
-                style={'width': '150px',
+                style={'width': '500px',
                        # 'display': 'inline-block',
                        'margin': '0 auto',
                        'margin-top': '4px'

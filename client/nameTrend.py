@@ -16,11 +16,16 @@ layout = html.Div([
             "Name: ",
             dcc.Input(id='name-trend-input-name', value='James', type='text')
         ],
-            style={'height':'50px',
-                   'display':'inline-block',
-                   'position': 'absolute',
-                   'left': '120px'
-                   }
+            style={
+                # 'display': 'inline-block',
+                # 'position':'absolute',
+                'padding': '2px',
+                'margin': '4px 0 4px',
+                # 'margin': '15px auto',
+                # 'top': '12px',
+                # 'left': '470px'
+
+            }
         ),
 
         html.Div(
@@ -51,9 +56,9 @@ layout = html.Div([
             value='F',
         )
     ],
-    style={'width': '160px',
+    style={'width': '500px',
            # 'display': 'inline-block',
-           'padding': '5px',
+           'padding': '2px',
            'margin': '10px auto'
            }
     ),
@@ -116,9 +121,9 @@ layout = html.Div([
             id='name-trend-input-state'
         )
     ],
-        style={'width': '300px',
+        style={'width': '500px',
                # 'display': 'inline-block',
-               'padding': '5px',
+               'padding': '2px',
                'margin': '0 auto',
                # 'position': 'absolute',
                # 'left': '310px',
@@ -135,6 +140,7 @@ alert = dbc.Alert("Invalid Name!", color="danger", dismissable=False, duration=1
     Input('name-trend-input-sex', 'value'),
     Input('name-trend-input-state', 'value'))
 def update_figure(name, sex, state):
+    name = name.capitalize()
     if name not in df.name.values and name != '':  # if illegal, make graph blank and show alert
         return [], alert
     new_df = df

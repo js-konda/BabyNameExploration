@@ -28,7 +28,7 @@ def trainModel():
     X = X.tocsc()
     y = (namechartdiff.gender == 'male').values.astype(np.int)
 
-    itrain, itest = train_test_split(range(namechartdiff.shape[0]), train_size=0.7)
+    itrain, itest = train_test_split(range(namechartdiff.shape[0]), train_size=0.9)
     mask = np.ones(namechartdiff.shape[0], dtype='int')
     mask[itrain] = 1
     mask[itest] = 0
@@ -36,8 +36,6 @@ def trainModel():
 
     Xtrainthis = X[mask]
     Ytrainthis = y[mask]
-    Xtestthis = X[~mask]
-    Ytestthis = y[~mask]
     clf = MultinomialNB(alpha=1)
     clf.fit(Xtrainthis, Ytrainthis)
     filename = 'finalized_model.sav'
@@ -47,13 +45,16 @@ def trainModel():
 
 def getGender(name):
     file_path = './finalized_model.sav'
+    vectorizer_path = './vectorizer.pickle'
     if os.path.exists(file_path):
         loaded_model = pickle.load(open(file_path, 'rb'))
+        char_vectorizer = pickle.load(open(vectorizer_path, 'rb'))
     else:
         trainModel()
         loaded_model = pickle.load(open(file_path, 'rb'))
-    char_vectorizer = pickle.load(open('./vectorizer.pickle', 'rb'))
-    new = char_vectorizer.transform([name])
+        char_vectorizer = pickle.load(open(vectorizer_path, 'rb'))
+
+    new = char_vectorizer.transform([str(name)])
     y_pred = loaded_model.predict(new)
     if y_pred == 1:
         return 1

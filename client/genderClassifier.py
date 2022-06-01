@@ -18,7 +18,7 @@ layout = html.Div([
                 style={
                     # 'display': 'inline-block',
                     # 'position':'absolute',
-                    'padding': '0px',
+                    'padding': '2px',
                     'margin': '4px 0 4px',
                     # 'margin': '15px auto',
                     # 'top': '12px',
@@ -46,6 +46,7 @@ layout = html.Div([
     Input('gender-classifier-input-name', 'value'),
 )
 def update_figure(name):
+    name = name.capitalize()
     x = getGender(name)
     if x:
         gender = 'male'
@@ -59,7 +60,7 @@ def update_figure(name):
     female_baby_df = female_name_df.groupby('year').sum()
     fig.add_trace(go.Scatter(x=male_baby_df.index, y=male_baby_df['count'], name='Total Number of male babies'))
     fig.add_trace(go.Scatter(x=female_baby_df.index, y=female_baby_df['count'], name='Total Number of female babies'))
-    fig.update_layout(title_text=name + " is most probably a " + gender + " name and the follwing is the trend over time",
+    fig.update_layout(title_text=name + " is most probably a " + gender + " name and the following is the trend over time",
                       yaxis_title="Value (log scale)")
     fig.update_yaxes(type="log")
 
