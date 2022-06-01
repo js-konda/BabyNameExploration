@@ -165,12 +165,14 @@ def update_figure(year, sex, th, state):
     year = int(year)
     th = int(th)
 
-    names = df.groupby(['name', 'year', 'sex'])['count'].sum().reset_index()
+    new_df = df
+    if state is not None:
+        new_df = df[(df['state_abb'] == state)]
+
+    names = new_df.groupby(['name', 'year', 'sex'])['count'].sum().reset_index()
     sort_names = names.sort_values(by=['year', 'count'], ascending=False)
     sort_names_year = sort_names[sort_names['year'] == year]
     sort_names_year_sex = sort_names_year[sort_names_year['sex'] == sex]
-    if state is not None:
-        sort_names_year_sex = sort_names_year_sex[sort_names_year_sex['state_abb'] == state]
     sort_names_year_sex_th = sort_names_year_sex.head(th)
     c = [i for i in range(th)]
     fig = go.Figure()
