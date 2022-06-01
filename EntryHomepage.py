@@ -1,12 +1,12 @@
 import dash_bootstrap_components as dbc
 from dash import Input, Output, dcc, html
 
-import USHeatMap
-import genderClassifier
-import nameCloud
-import nameTrend
-import top5Name
-from app import app
+import client.USHeatMap as USHeatMap
+import client.genderClassifier as genderClassifier
+import client.nameCloud as nameCloud
+import client.nameTrend as nameTrend
+import client.top5Name as top5Name
+from client.app import app
 
 # the style arguments for the sidebar. We use position:fixed and a fixed width
 SIDEBAR_STYLE = {
@@ -35,17 +35,18 @@ sidebar = html.Div(
         html.Hr(),
         dbc.Nav(
             [
-                dbc.NavLink("Top Names", href="/", active="exact"),
-                dbc.NavLink("US Name Cloud", href="/name-cloud", active="exact"),
-                dbc.NavLink("Name Trend", href="/name-trend", active="exact"),
-                dbc.NavLink("US Heat Map", href="/heat-map", active="exact"),
-                dbc.NavLink("Gender Classifier", href="/gender-classifier", active="exact")
+                dbc.NavLink("Top Names", id="link-top5", href="/", active="exact"),
+                dbc.NavLink("US Name Cloud", id="link-name-cloud", href="/name-cloud", active="exact"),
+                dbc.NavLink("Name Trend", id="link-name-trend", href="/name-trend", active="exact"),
+                dbc.NavLink("US Heat Map", id="link-heat-map", href="/heat-map", active="exact"),
+                dbc.NavLink("Gender Classifier", id="link-gender-classifier", href="/gender-classifier", active="exact")
             ],
             vertical=True,
             pills=True,
         ),
     ],
     style=SIDEBAR_STYLE,
+    id="content-sidebar"
 )
 
 content = html.Div(id="page-content", style=CONTENT_STYLE)
@@ -55,24 +56,23 @@ app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
 
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
+    layout, code = page_router(pathname)
+    return layout
+
+
+def page_router(pathname):
     if pathname == "/":
-        return top5Name.layout
+        return top5Name.layout, 200
     elif pathname == "/name-cloud":
-        return nameCloud.layout
+        return nameCloud.layout, 200
     elif pathname == "/name-trend":
-        return nameTrend.layout
+        return nameTrend.layout, 200
     elif pathname == "/heat-map":
-        return USHeatMap.layout
+        return USHeatMap.layout, 200
     elif pathname == "/gender-classifier":
-        return genderClassifier.layout
+        return genderClassifier.layout, 200
     # If the user tries to reach a different page, return a 404 message
-    return dbc.Jumbotron(
-        [
-            html.H1("404: Not found", className="text-danger"),
-            html.Hr(),
-            html.P(f"The pathname {pathname} was not recognised..."),
-        ]
-    )
+    return top5Name.layout, 404
 
 
 if __name__ == '__main__':
