@@ -1,16 +1,12 @@
 import os.path
 import pickle
 
-import matplotlib as mlp
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 
 from app import training_df
-
-mlp.use("TKAgg")
-mlp.rcParams.update({'font.family': "Open Sans", 'font.size': 16})
 
 
 def trainModel():
