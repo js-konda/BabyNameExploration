@@ -14,9 +14,9 @@ layout = html.Div([
         html.Div([
             html.Div([
                 'TOP',
-                dcc.Slider(1, 20, 1,
+                dcc.Slider(1, 15, 1,
                            # marks=None,
-                           value=5,
+                           value=8,
                            id='top5-name-input-th'),
             ],
                 style={'width': '500px',
