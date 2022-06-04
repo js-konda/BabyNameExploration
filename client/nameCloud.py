@@ -3,8 +3,8 @@ from io import BytesIO
 
 import dash
 import dash_bootstrap_components as dbc
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 import pandas as pd
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
@@ -12,7 +12,7 @@ from datetime import date
 from plotly.subplots import make_subplots
 from wordcloud import WordCloud
 
-from app import app, df
+from client.app import app, df
 
 layout = html.Div([
     dcc.Graph(id='name-cloud-graph',
@@ -153,6 +153,30 @@ layout = html.Div([
 alert = dbc.Alert("Please input year between 1910-2020!", color='danger', dismissable=False, duration=1500)
 
 
+def get_most_named_data(syear, eyear, th, sex, state):
+    filtered_df = df[(df['year'] >= syear) & (df['year'] <= eyear)]
+    filtered_df = filtered_df[filtered_df['sex'] == sex]
+    if state is not None:
+        filtered_df = filtered_df[filtered_df['state_abb'] == state]
+    names = filtered_df[['name', 'count']].groupby('name').sum()
+    sort_names = names.sort_values(by='count', ascending=False)
+    sort_names_th = sort_names.head(th)
+    most_named = pd.Series(sort_names_th['count'].values, index=sort_names_th.index).to_dict()
+    return most_named
+
+
+def get_name_cloud_image(dic, color):
+    wc = WordCloud(background_color="white",
+                   random_state=42, width=1500, height=1500,
+                   colormap=color)
+    nc = wc.generate_from_frequencies(dic)
+    nc_img = nc.to_image()
+    prefix = "data:image/png;base64,"
+    with BytesIO() as buffer:
+        nc_img.save(buffer, 'png')
+        img = prefix + base64.b64encode(buffer.getvalue()).decode()
+    return img
+
 @app.callback(
     Output('name-cloud-graph', 'figure'),
     Output('name-cloud-graph-alert', 'children'),
@@ -162,28 +186,6 @@ alert = dbc.Alert("Please input year between 1910-2020!", color='danger', dismis
     Input('name-cloud-input-state', 'value')
 )
 def update_figure(startYear, endYear, th, state):
-    def get_most_named_data(syear, eyear, th, sex, state):
-        filtered_df = df[(df['year'] >= syear) & (df['year'] <= eyear)]
-        filtered_df = filtered_df[filtered_df['sex'] == sex]
-        if state is not None:
-            filtered_df = filtered_df[filtered_df['state_abb'] == state]
-        names = filtered_df[['name', 'count']].groupby('name').sum()
-        sort_names = names.sort_values(by='count', ascending=False)
-        sort_names_th = sort_names.head(th)
-        most_named = pd.Series(sort_names_th['count'].values, index=sort_names_th.index).to_dict()
-        return most_named
-
-    def get_name_cloud_image(dic, color):
-        wc = WordCloud(background_color="white",
-                       random_state=42, width=1500, height=1500,
-                       colormap=color)
-        nc = wc.generate_from_frequencies(dic)
-        nc_img = nc.to_image()
-        prefix = "data:image/png;base64,"
-        with BytesIO() as buffer:
-            nc_img.save(buffer, 'png')
-            img = prefix + base64.b64encode(buffer.getvalue()).decode()
-        return img
 
     if (startYear not in df.year.values and startYear is not None) or \
             (endYear not in df.year.values and endYear is not None):

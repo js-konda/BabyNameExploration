@@ -1,10 +1,10 @@
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 
-from app import app, df
-from model import getGender
+from client.app import app, df
+from client.model import getGender
 
 layout = html.Div([
     dcc.Graph(id='gender-classifier-graph'),
