@@ -26,6 +26,25 @@ layout = html.Div([
 
             }
         ),
+
+        html.Div([
+            dcc.RadioItems(
+                id='us-heat-map-input-sex',
+                options=[
+                    {'label': 'Female', 'value': 'F'},
+                    {'label': 'Male', 'value': 'M'},
+                ],
+                value='F',
+                labelStyle={"padding": "2px"},
+                inputStyle={"margin-right": "1px"}
+            )
+        ],
+            style={'width': '500px',
+                   # 'display': 'inline-block',
+                   'margin': '0 auto',
+                   }
+        ),
+
         html.Div([
             'Year  ',
             dcc.Input(id='us-heat-map-input-year', type='number', value=2020)
@@ -47,24 +66,6 @@ layout = html.Div([
                 # 'height': '50px',
                 'top': '0px',
                 'left': '200px',
-            }
-        ),
-
-
-
-        html.Div([
-            dcc.RadioItems(
-                id='us-heat-map-input-sex',
-                options=[
-                    {'label': 'Female', 'value': 'F'},
-                    {'label': 'Male', 'value': 'M'},
-                ],
-                value='F'
-            )
-        ],
-            style={
-                # 'display': 'inline-block',
-
             }
         ),
 

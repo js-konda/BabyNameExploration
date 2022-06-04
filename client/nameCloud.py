@@ -10,6 +10,7 @@ import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 from datetime import date
 from plotly.subplots import make_subplots
+from wordcloud import WordCloud
 
 from client.app import app, df
 
@@ -34,12 +35,24 @@ layout = html.Div([
             ),
 
             html.Div([
-                'Year  ',
-                dcc.Input(id='name-cloud-input-year', type='number', value=2020)
+                html.Div([
+                    'Start Year  ',
+                    dcc.Input(id='name-cloud-input-year-start', type='number', value=2010)
+                ],
+                    style={'flex': 1
+                           }
+                ),
+                html.Div([
+                    'End Year  ',
+                    dcc.Input(id='name-cloud-input-year-end', type='number', value=2020)
+                ],
+                    style={'flex': 1
+                           }
+                ),
             ],
                 style={'width': '500px',
-                       # 'display': 'inline-block',
-                       'padding': '2px',
+                       'display': 'flex',
+                       'padding': '4px',
                        'margin': '0 auto',
                        # 'position': 'absolute',
                        # 'left': '310px',
@@ -113,24 +126,6 @@ layout = html.Div([
                        # 'left': '310px',
                        }
             ),
-            # html.Div([
-            #     'Year  ',
-            #     dcc.DatePickerRange(
-            #         id='my-date-picker-range',
-            #         end_date=date(2017, 6, 21),
-            #         display_format='YYYY',
-            #         start_date_placeholder_text='YY',
-            #     )
-            # ],
-            #     style={'width': '300px',
-            #            # 'display': 'inline-block',
-            #            'padding': '0px',
-            #            'margin': '0 auto',
-            #            # 'position': 'absolute',
-            #            # 'left': '310px',
-            #            }
-            # ),
-
 
             html.Div(
                 id='name-cloud-graph-alert',
@@ -158,54 +153,63 @@ layout = html.Div([
 alert = dbc.Alert("Please input year between 1910-2020!", color='danger', dismissable=False, duration=1500)
 
 
+def get_most_named_data(syear, eyear, th, sex, state):
+    filtered_df = df[(df['year'] >= syear) & (df['year'] <= eyear)]
+    filtered_df = filtered_df[filtered_df['sex'] == sex]
+    if state is not None:
+        filtered_df = filtered_df[filtered_df['state_abb'] == state]
+    names = filtered_df[['name', 'count']].groupby('name').sum()
+    sort_names = names.sort_values(by='count', ascending=False)
+    sort_names_th = sort_names.head(th)
+    most_named = pd.Series(sort_names_th['count'].values, index=sort_names_th.index).to_dict()
+    return most_named
+
+
+def get_name_cloud_image(dic, color):
+    wc = WordCloud(background_color="white",
+                   random_state=42, width=1500, height=1500,
+                   colormap=color)
+    nc = wc.generate_from_frequencies(dic)
+    nc_img = nc.to_image()
+    prefix = "data:image/png;base64,"
+    with BytesIO() as buffer:
+        nc_img.save(buffer, 'png')
+        img = prefix + base64.b64encode(buffer.getvalue()).decode()
+    return img
+
 @app.callback(
     Output('name-cloud-graph', 'figure'),
     Output('name-cloud-graph-alert', 'children'),
-    Input('name-cloud-input-year', 'value'),
+    Input('name-cloud-input-year-start', 'value'),
+    Input('name-cloud-input-year-end', 'value'),
     Input('name-cloud-input-th', 'value'),
     Input('name-cloud-input-state', 'value')
 )
-def update_figure(year, th, state):
-    def get_most_named_data(year, th, sex, state):
-        filtered_df = df[df['year'] == year]
-        filtered_df = filtered_df[filtered_df['sex'] == sex]
-        if state is not None:
-            filtered_df = filtered_df[filtered_df['state_abb'] == state]
-        names = filtered_df[['name', 'count']].groupby('name').sum()
-        sort_names = names.sort_values(by='count', ascending=False)
-        sort_names_th = sort_names.head(th)
-        most_named = pd.Series(sort_names_th['count'].values, index=sort_names_th.index).to_dict()
-        return most_named
+def update_figure(startYear, endYear, th, state):
 
-    #def get_name_cloud_image(dic, color):
-    #    wc = WordCloud(background_color="white",
-    #                   random_state=42, width=1500, height=1500,
-    #                   colormap=color)
-    #    nc = wc.generate_from_frequencies(dic)
-    #    nc_img = nc.to_image()
-    #    prefix = "data:image/png;base64,"
-    #    with BytesIO() as buffer:
-    #        nc_img.save(buffer, 'png')
-    #        img = prefix + base64.b64encode(buffer.getvalue()).decode()
-    #    return img
-
-    if year not in df.year.values and year is not None:
+    if (startYear not in df.year.values and startYear is not None) or \
+            (endYear not in df.year.values and endYear is not None):
         return [], alert
-    year = int(year)
+    startYear = int(startYear)
+    endYear = int(endYear)
     th = int(th)
 
-    most_named_f = get_most_named_data(year, th, 'F', state)
-    most_named_m = get_most_named_data(year, th, 'M', state)
-    #f_img = get_name_cloud_image(most_named_f, 'autumn')
-    #m_img = get_name_cloud_image(most_named_m, 'winter')
+    most_named_f = get_most_named_data(startYear, endYear, th, 'F', state)
+    most_named_m = get_most_named_data(startYear, endYear, th, 'M', state)
+    f_img = get_name_cloud_image(most_named_f, 'autumn')
+    m_img = get_name_cloud_image(most_named_m, 'winter')
 
     fig = make_subplots(rows=1, cols=2)
-    #fig.add_trace(go.Image(source=f_img), 1, 1)
-    #fig.add_trace(go.Image(source=m_img), 1, 2)
+    fig.add_trace(go.Image(source=f_img), 1, 1)
+    fig.add_trace(go.Image(source=m_img), 1, 2)
 
     fig.update_xaxes(visible=False)
     fig.update_yaxes(visible=False)
-    fig.update_layout(title_text=str(th) + " most common female and male names in " + str(year))
+    if startYear == endYear:
+        title_text = str(th) + " most common female and male names in " + str(startYear)
+    else:
+        title_text = str(th) + " most common female and male names between " + str(startYear) + " and " + str(endYear)
+    fig.update_layout(title_text=title_text)
 
     return fig, dash.no_update
 
