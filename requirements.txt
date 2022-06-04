@@ -1,0 +1,6 @@
+numpy
+pandas
+wordcloud
+dash
+dash-bootstrap-components
+pytest

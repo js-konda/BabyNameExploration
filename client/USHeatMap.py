@@ -1,12 +1,12 @@
 import dash
 import dash_bootstrap_components as dbc
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 import numpy as np
 # init_notebook_mode(connected=True)
 from dash.dependencies import Input, Output
 
-from app import app, df
+from client.app import app, df
 
 layout = html.Div([
     dcc.Graph(id='us-heat-map-graph'),
