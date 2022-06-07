@@ -1,1 +1,0 @@
-ssh -i "yiy291.pem" ec2-user@ec2-34-222-38-19.us-west-2.compute.amazonaws.com
